@@ -1,0 +1,52 @@
+name: Gate 1 quality
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  mobile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint && pnpm typecheck && pnpm test
+      - run: pnpm --filter mobile exec expo install --check
+      - run: pnpm --filter mobile exec expo export --platform web
+  api:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: wreckday
+          POSTGRES_PASSWORD: local-only
+          POSTGRES_DB: wreckday_test
+        ports: ["55432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U wreckday"
+          --health-interval 3s --health-retries 20
+    env:
+      WRECKDAY_DATABASE_URL: postgresql+psycopg://wreckday:local-only@localhost:55432/wreckday_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: services/api/requirements.lock
+      - run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - run: pip install -r services/api/requirements.lock
+      - run: ruff check services/api && ruff format --check services/api
+      - run: mypy services/api/app/config.py services/api/app/schemas.py
+      - run: PYTHONPATH=services/api python scripts/contracts.py --check
+      - working-directory: services/api
+        run: |
+          alembic upgrade head
+          alembic check
+          alembic downgrade base
+          alembic upgrade head
+          pytest -q

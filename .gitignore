@@ -1,0 +1,14 @@
+node_modules/
+.venv/
+.env
+.env.*
+!.env.example
+.expo/
+dist/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.pyc
+work/
+*.db
