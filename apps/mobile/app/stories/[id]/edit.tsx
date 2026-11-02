@@ -56,29 +56,25 @@ export default function Editor() {
       else router.push(`/jobs/${job.id}`);
     },
   });
-  const share = useMutation({
-    mutationFn: async () => {
-      const latest = await api<Story>(`/v1/stories/${id}`);
-      const url = latest.export_url;
-      if (!url) throw new Error("Save your edits and render the export first.");
-      await shareMedia(
-        url,
-        `WRECKDAY-${id}-r${latest.revision}.mp4`,
-        "video/mp4",
-      );
-    },
-  });
   const shareStill = useMutation({
-    mutationFn: async (position: number) => {
+    mutationFn: async ({
+      position,
+      withCaption,
+    }: {
+      position: number;
+      withCaption: boolean;
+    }) => {
       const latest = await api<Story>(`/v1/stories/${id}`);
-      const url = latest.frames[position]?.still_url;
+      const url = withCaption
+        ? latest.frames[position]?.still_url
+        : latest.frames[position]?.url;
       if (!url)
         throw new Error(
           "Save changes and render first to update your still images.",
         );
       await shareMedia(
         url,
-        `WRECKDAY-${id}-${position + 1}-r${latest.revision}.png`,
+        `WRECKDAY-${id}-${position + 1}-r${latest.revision}${withCaption ? "-caption" : ""}.png`,
         "image/png",
       );
     },
@@ -141,13 +137,29 @@ export default function Editor() {
                       secondary
                       label={
                         Platform.OS === "web"
-                          ? "Download this still ↓"
-                          : "Share this still ↗"
+                          ? "Download photo ↓"
+                          : "Share photo ↗"
                       }
                       disabled={
                         dirty || !frame.still_url || shareStill.isPending
                       }
-                      onPress={() => shareStill.mutate(position)}
+                      onPress={() =>
+                        shareStill.mutate({ position, withCaption: false })
+                      }
+                    />
+                    <Button
+                      secondary
+                      label={
+                        Platform.OS === "web"
+                          ? "Download with caption ↓"
+                          : "Share with caption ↗"
+                      }
+                      disabled={
+                        dirty || !frame.still_url || shareStill.isPending
+                      }
+                      onPress={() =>
+                        shareStill.mutate({ position, withCaption: true })
+                      }
                     />
                     {position > 0 && (
                       <Button
@@ -164,7 +176,7 @@ export default function Editor() {
           <View style={styles.panel}>
             <Text style={styles.heading}>The reveal.</Text>
             <Field
-              label="FINAL END CARD · AI FICTION LABEL IS ALWAYS ADDED"
+              label="REVEAL MESSAGE · SEND SEPARATELY"
               value={reveal}
               onChange={(text) => {
                 setReveal(text);
@@ -173,17 +185,13 @@ export default function Editor() {
               maxLength={180}
             />
             <Text style={styles.small}>
-              Every exported frame keeps its AI FICTION watermark, including
-              after caption edits.
+              The reveal stays here until you choose to send it. Shared stills
+              have no added label.
             </Text>
           </View>
           <ErrorText
             error={
-              save.error ??
-              exportJob.error ??
-              share.error ??
-              shareStill.error ??
-              remove.error
+              save.error ?? exportJob.error ?? shareStill.error ?? remove.error
             }
           />
           <View style={styles.row}>
@@ -195,27 +203,23 @@ export default function Editor() {
             <Button
               secondary
               label={
-                exportJob.isPending ? "Starting render…" : "Render MP4 · free"
+                exportJob.isPending
+                  ? "Starting render…"
+                  : "Prepare images · free"
               }
               disabled={dirty || exportJob.isPending}
               onPress={() => exportJob.mutate()}
             />
-            <Button
-              label={
-                share.isPending
-                  ? "Preparing…"
-                  : Platform.OS === "web"
-                    ? "Download MP4 ↓"
-                    : "Share MP4 ↗"
-              }
-              disabled={dirty || !query.data.export_url || share.isPending}
-              onPress={() => share.mutate()}
-            />
           </View>
+          {!dirty && query.data.frames.some((frame) => !frame.still_url) && (
+            <Text style={styles.small}>
+              Prepare images to refresh older exports before sharing.
+            </Text>
+          )}
           {dirty && (
             <Text style={styles.small}>
-              Save changes before exporting. Re-render after saving to include
-              your new captions.
+              Save your changes, then prepare images to include your new
+              captions.
             </Text>
           )}
           <Button

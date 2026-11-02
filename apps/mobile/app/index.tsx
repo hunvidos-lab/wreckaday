@@ -61,7 +61,7 @@ export default function Welcome() {
               />
             </View>
             <Text style={styles.small}>
-              Fictional stories, clearly labeled. No account needed to preview.
+              Fictional stories. No account needed to preview.
             </Text>
           </View>
         </View>

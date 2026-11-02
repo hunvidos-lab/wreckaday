@@ -30,7 +30,7 @@ export default function Detail() {
       />
       <Button
         secondary
-        label="Watch the sample"
+        label="View the sample"
         onPress={() => router.push("/examples")}
       />
       <Text style={styles.small}>

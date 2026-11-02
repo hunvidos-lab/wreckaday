@@ -9,8 +9,7 @@ avoid circular imports and packaging overhead. `services/worker` documents the
 entry point; no Redis or new paid services.
 
 The development preview uses one pre-rendered AI-fiction editorial sample image,
-repeated for all three frames. It is clearly labeled as a mock fixture and never
-represented as a live inference result. The repeat means this preview does not
+repeated for all three frames. The creator interface identifies it as a mock fixture; exported stills do not carry a label. The repeat means this preview does not
 demonstrate scene progression or live-provider quality. The original procedural
 illustrations were replaced during the visual refresh.
 
@@ -35,3 +34,14 @@ Bundle identifiers use reserved `invalid.example` placeholders. The existing
 GitHub repository is public; this work does not change its visibility. No brand
 clearance, legal compliance, physical-device QA, cloud deployment, or store
 approval is claimed.
+
+## Founder direction update — still images and separate reveal
+
+The founder explicitly changed the earlier spec: the initial shared image has no
+AI-fiction label, and the reveal is sent separately by the creator. This overrides
+the original watermark and video-export requirements. New PNG stills omit
+watermarks and fixture labels; the creator interface remains clear about mock
+generation. The app no longer offers video sharing. Pre-existing mock exports
+are withheld until re-rendered with the current image format. Real inference,
+likeness consent, privacy safeguards, review of distribution rules, and photo
+personalization remain unimplemented.

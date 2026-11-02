@@ -39,7 +39,7 @@ export default function Progress() {
       <Text style={styles.eyebrow}>THE CONSEQUENCES ARE LOADING</Text>
       <Text style={styles.title}>
         {query.data?.kind === "export"
-          ? "Making it cinematic."
+          ? "Preparing your images."
           : "Building a bad idea."}
       </Text>
       <Text style={styles.body}>

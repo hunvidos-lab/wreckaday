@@ -103,15 +103,13 @@ def story_data(story):
                 **f,
                 "url": media.sign(story.id, f["key"]),
                 "still_url": media.sign(story.id, f["still_key"])
-                if f.get("still_key") and story.export_revision == story.revision
+                if f.get("still_key", "").endswith("-v2.png") and story.export_revision == story.revision
                 else None,
             }
             for f in story.frames
         ],
         "reveal": story.reveal,
-        "export_url": media.sign(story.id, story.export_key)
-        if story.export_key and story.export_revision == story.revision
-        else None,
+        "export_url": None,
         "provider": "mock",
         "created_at": story.created_at.isoformat(),
     }
@@ -308,7 +306,7 @@ def export(story_id: str, owner=Depends(auth.user)):
         story = own(db, story_id, owner, True)
         if story.state != "completed":
             raise HTTPException(409, "Generate the story first")
-        key = f"export:{story.id}:{story.revision}"
+        key = f"stills-v2:{story.id}:{story.revision}"
         existing = db.scalar(select(Job).where(Job.owner == owner, Job.idempotency_key == key))
         if existing:
             if existing.state == "failed":
@@ -354,8 +352,8 @@ def download(story_id: str, filename: str, expires: int, signature: str):
     with Session() as db:
         story = db.get(Story, story_id)
         if not story or key not in [f["key"] for f in story.frames] + [
-            f.get("still_key") for f in story.frames
-        ] + [story.export_key]:
+            f.get("still_key") for f in story.frames if f.get("still_key", "").endswith("-v2.png")
+        ]:
             raise HTTPException(404, "Asset not found")
     target = media.path(key)
     if not target.is_file():

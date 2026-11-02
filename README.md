@@ -1,13 +1,13 @@
 # WRECKDAY — Gate 1 development preview
 
-A native Expo/React Native app and FastAPI/Postgres service for creating clearly
-labeled, three-frame fictional comedy stories. This milestone runs end-to-end
+A native Expo/React Native app and FastAPI/Postgres service for creating
+fictional comedy images. This milestone runs end-to-end
 with a pre-rendered editorial sample image, **zero inference spend**, and no
 external accounts. It is not a production or store-ready build.
 
 Implemented: sample browse, hero scenario, draft builder, development accounts,
 server-owned demo credits, durable job worker, three-frame editor/reordering,
-required reveal, 1080×1920 silent MP4 with labels and subtle pans, download/native
+a separately shared reveal, 1080×1920 PNG stills, download/native
 share adapter, saved library, story/media deletion, cancellation/retry and logout.
 
 ## Quick start
@@ -30,14 +30,14 @@ pnpm --filter mobile web
 
 Try a sample without an account, or pick “She's moving in” → Make mine → select
 Alex/Sam → review and confirm 3 demo credits → edit → save → render → download.
-The first generation already includes an MP4; editing requires a free re-render.
+The first generation includes PNG images; editing requires a free re-render. Choose a clean photo or an image with your caption. Shared images have no added label. Keep the reveal message separate until you choose to send it.
 
 For a native development build, configure a reachable API host in
 `EXPO_PUBLIC_API_URL` and `WRECKDAY_PUBLIC_API_URL`, allow your origin if using web,
 and use `pnpm --filter mobile exec expo run:android` or `expo run:ios` on a machine
 with the appropriate SDKs. Compose binds API to loopback by default; deliberately
 adjust the binding for trusted LAN testing. Native sharing uses `expo-sharing`
-and a downloaded local MP4, without access to contacts or messaging histories.
+and a downloaded local PNG, without access to contacts or messaging histories.
 Native binaries, physical devices and messaging-app sharing have not been tested
 in this cloud environment. EAS configuration is supplied but no build was sent.
 
@@ -85,7 +85,7 @@ docker compose exec db createdb -U wreckday wreckday_test
 (cd services/api && ../../.venv/bin/pytest -q)
 ```
 
-API tests exercise real Postgres and one real FFmpeg generate/edit/export cycle.
+API tests exercise real Postgres and the still-image generation/edit/export cycle.
 Other failure/concurrency tests replace rendering, never paid inference. Test DB
 schema is reset per test; do not place anything valuable in `wreckday_test`.
 
@@ -98,7 +98,7 @@ node scripts/browser-smoke.cjs
 PLAYWRIGHT_CHROMIUM_PATH=/usr/bin/chromium node scripts/browser-smoke.cjs
 ```
 
-The smoke creates and deletes its own fixture story, downloads its video and
+The smoke creates and deletes its own fixture story, downloads its still image and
 captures screenshots in ignored `work/browser`. GitHub Actions contains unit,
 contract, lint/type checks, web bundle and Postgres/migration/API checks. Browser
 smoke is currently a local integration check, not a CI job.
@@ -107,7 +107,7 @@ smoke is currently a local integration check, not a CI job.
 
 - `apps/mobile`: Expo Router UI, auth/session, API client, share/cache handling.
 - `services/api/app`: config, JWT fixture auth, models, endpoints, queue, providers,
-  private media capabilities, Pillow/FFmpeg renderer.
+  private media capabilities and Pillow still-image renderer.
 - `services/api/migrations`: reversible Alembic schema.
 - `packages/contracts`: Zod input, typed outputs, API JSON Schema and shared cases.
 - `docs/authentication.md`: implemented auth flow and production target.

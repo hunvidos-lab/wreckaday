@@ -124,7 +124,12 @@ def process(job_id, worker):
             if kind == "generate":
                 MockImageGenerator().generate(i, workspace / f"frame-{i}.png")
             else:
-                shutil.copyfile(media.path(frame["key"]), workspace / frame["key"].split("/")[-1])
+                target = workspace / frame["key"].split("/")[-1]
+                if frame.get("still_key", "").endswith("-v2.png"):
+                    shutil.copyfile(media.path(frame["key"]), target)
+                else:
+                    # Older mock frames contained a baked-in label; refresh from the clean fixture.
+                    MockImageGenerator().generate(i, target)
         with Session.begin() as db:
             job = db.scalar(select(Job).where(Job.id == job_id).with_for_update())
             if not job or job.lease_owner != worker or job.state not in ACTIVE:
@@ -151,12 +156,14 @@ def process(job_id, worker):
                     shutil.copyfile(workspace / f"frame-{i}.png", destination / f"frame-{i}.png")
                 story.frames = frames
                 story.state = "completed"
-            shutil.copyfile(video, destination / video.name)
+            if kind == "export":
+                for frame in frames:
+                    shutil.copyfile(workspace / frame["key"].split("/")[-1], media.path(frame["key"]))
             for i, frame in enumerate(frames):
-                frame["still_key"] = f"{story_id}/still-{frame['id']}-r{revision}.png"
+                frame["still_key"] = f"{story_id}/still-{frame['id']}-r{revision}-v2.png"
                 shutil.copyfile(workspace / f"card-{i}.png", media.path(frame["still_key"]))
             story.frames = [dict(frame) for frame in frames]
-            story.export_key = f"{story_id}/{video.name}"
+            story.export_key = None
             story.export_revision = revision
             current.state = "completed"
             current.progress = 100

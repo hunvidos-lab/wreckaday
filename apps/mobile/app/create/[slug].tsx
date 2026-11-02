@@ -148,8 +148,8 @@ export default function Create() {
               <Text style={styles.heading}>Ready for the consequences?</Text>
               <Text style={styles.body}>
                 3 demo credits. A pre-rendered sample image repeats in each
-                frame. No provider calls or real charges. Every frame and export
-                is labeled AI FICTION.
+                frame. No provider calls or real charges. Shared images have no
+                added label; send the reveal separately.
               </Text>
               <Button
                 disabled={

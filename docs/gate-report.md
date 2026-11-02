@@ -1,5 +1,7 @@
 # Gate report — 2026-11-01
 
+> Historical Gate 1 report. The founder subsequently changed the direction to still images, no added label on shared images, and a separate reveal. See the decision update in ADR 0001 for current behavior; the MP4 and watermark details below describe the earlier build.
+
 ## Status
 
 Gate 0 local setup/architecture checks are implemented. Gate 1's credential-free

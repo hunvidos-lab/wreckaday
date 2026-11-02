@@ -1,5 +1,4 @@
 import json
-import subprocess
 from concurrent.futures import ThreadPoolExecutor
 from datetime import timedelta
 from pathlib import Path
@@ -45,22 +44,12 @@ def test_real_end_to_end_export_edit_and_delete(client, headers, other):
     result = client.get(f"/v1/stories/{sid}", headers=headers).json()["data"]
     assert len(result["frames"]) == 3
     assert client.get(result["frames"][0]["still_url"]).status_code == 200
-    video = media.path(f"{sid}/export-0.mp4")
-    probe = json.loads(
-        subprocess.check_output(
-            ["ffprobe", "-v", "error", "-show_streams", "-show_format", "-of", "json", str(video)]
-        )
-    )
-    stream = probe["streams"][0]
-    assert (stream["width"], stream["height"], stream["codec_name"], stream["pix_fmt"]) == (
-        1080,
-        1920,
-        "h264",
-        "yuv420p",
-    )
-    assert 10.9 <= float(probe["format"]["duration"]) <= 11.2
-    assert len(probe["streams"]) == 1  # deliberately silent
-    assert client.get(result["export_url"]).status_code == 200
+    from PIL import Image
+
+    with Image.open(media.path(result["frames"][0]["still_key"])) as still:
+        assert still.size == (1080, 1920)
+        assert still.format == "PNG"
+    assert result["export_url"] is None
     assert client.get(f"/v1/stories/{sid}", headers=other).status_code == 404
     assert client.get(f"/v1/jobs/{jid}", headers=other).status_code == 404
     wallet = client.get("/v1/wallet", headers=headers).json()["data"]
@@ -80,10 +69,10 @@ def test_real_end_to_end_export_edit_and_delete(client, headers, other):
     assert exported.status_code == 202
     assert worker.run_once()
     final = client.get(f"/v1/stories/{sid}", headers=headers).json()["data"]
-    assert client.get(final["export_url"]).status_code == 200
+    assert client.get(final["frames"][0]["still_url"]).status_code == 200
     assert client.get("/v1/wallet", headers=headers).json()["data"]["available"] == 27
     assert client.delete(f"/v1/stories/{sid}", headers=headers).status_code == 200
-    assert client.get(final["export_url"]).status_code == 404
+    assert client.get(final["frames"][0]["still_url"]).status_code == 404
     assert not media.path(sid).exists()
 
 
@@ -242,18 +231,27 @@ def test_cancel_refund_and_retry(client, headers, other):
         assert db.scalar(select(func.count()).select_from(Ledger).where(Ledger.event == "capture")) == 1
 
 
-def test_render_wrap_and_watermark_cannot_be_covered():
-    from PIL import ImageChops, ImageDraw
+def test_stills_preserve_source_edges_without_added_labels_and_wrap_captions():
+    from PIL import Image, ImageChops, ImageDraw, ImageOps
 
     from app.render import captioned, fixture, font, wrap_pixels
 
     im = fixture(0)
+    source = Path(__file__).parents[1] / "app/assets/editorial-sample.png"
+    with Image.open(source) as image:
+        expected = ImageOps.fit(image.convert("RGB"), (1080, 1920), method=Image.Resampling.LANCZOS)
+    assert ImageChops.difference(im, expected).getbbox() is None
     output = captioned(im, "W" * 140)
+    assert ImageChops.difference(im.crop((0, 0, 1080, 150)), output.crop((0, 0, 1080, 150))).getbbox() is None
     assert (
         ImageChops.difference(im.crop((0, 1800, 1080, 1920)), output.crop((0, 1800, 1080, 1920))).getbbox()
         is None
     )
     drawing = ImageDraw.Draw(output)
+    assert wrap_pixels("A questionable decision", drawing, font(54, True), 500) == [
+        "A questionable",
+        "decision",
+    ]
     assert all(
         drawing.textlength(line, font=font(54, True)) <= 960
         for line in wrap_pixels("W" * 140, drawing, font(54, True))
@@ -299,3 +297,33 @@ def test_mock_provider_failures_refund(client, headers, failure):
     assert client.get(f"/v1/jobs/{jid}", headers=headers).json()["data"]["state"] == "failed"
     wallet = client.get("/v1/wallet", headers=headers).json()["data"]
     assert wallet["available"] == 30 and wallet["reserved"] == 0
+
+
+def test_old_labeled_stills_are_replaced_before_sharing(client, headers):
+    from PIL import ImageChops, ImageDraw
+
+    from app.render import fixture
+
+    sid = story(client, headers)
+    enqueue(client, headers, sid)
+    worker.run_once()
+    with Session.begin() as db:
+        item = db.get(Story, sid)
+        frames = [dict(frame) for frame in item.frames]
+        for frame in frames:
+            frame["still_key"] = frame["still_key"].replace("-v2.png", ".png")
+            image = fixture(0)
+            ImageDraw.Draw(image).rectangle((0, 0, 1080, 120), fill="red")
+            image.save(media.path(frame["key"]))
+        item.frames = frames
+        old_url = media.sign(sid, frames[0]["still_key"])
+    assert client.get(old_url).status_code == 404
+    assert client.get(f"/v1/stories/{sid}", headers=headers).json()["data"]["frames"][0]["still_url"] is None
+    assert client.post(f"/v1/stories/{sid}/export", headers=headers).status_code == 202
+    worker.run_once()
+    updated = client.get(f"/v1/stories/{sid}", headers=headers).json()["data"]
+    assert client.get(updated["frames"][0]["still_url"]).status_code == 200
+    from PIL import Image
+
+    with Image.open(media.path(updated["frames"][0]["key"])) as rebuilt:
+        assert ImageChops.difference(rebuilt.convert("RGB"), fixture(0)).getbbox() is None

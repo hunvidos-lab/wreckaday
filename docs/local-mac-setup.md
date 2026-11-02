@@ -67,7 +67,7 @@ pnpm install --frozen-lockfile
 nohup pnpm --filter mobile web > work/web.log 2>&1 &
 ```
 
-Open http://localhost:8081. Test the sample; choose She's moving in, select Alex/Sam, confirm 3 demo credits, edit and save captions, render, and download MP4. Accounts are shared test accounts: no real keys or personal data. No inference keys or paid inference are required. Native iOS/Android builds and messaging-app sharing are untested.
+Open http://localhost:8081. Test the sample; choose She's moving in, select Alex/Sam, confirm 3 demo credits, edit and save captions, prepare, and download a PNG. Accounts are shared test accounts: no real keys or personal data. No inference keys or paid inference are required. Native iOS/Android builds and messaging-app sharing are untested.
 
 ## Restart after reboot
 
