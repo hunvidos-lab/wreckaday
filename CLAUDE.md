@@ -16,7 +16,7 @@ Ask founder before spending money, using new paid credentials, creating permanen
 
 ## Hard rules
 
-1. No fictional claims disguised as actual serious emergencies, accidents, violence, infidelity evidence, crimes, exploitation or nonconsensual real-person deepfakes. Adult dark satire and opt-in characters are fine. All exported media clearly identifies AI fiction.
+1. Fixed content floor on EVERY tier (ADR 0006): no minors or anyone who looks under 18; no nudity or sexual content of a real face; no real person other than the uploader; no realistic fabricated evidence of crime, emergencies, arrests or infidelity; no real threats, doxxing, blackmail or self-harm. Above the floor, Inferno allows crude/profane humor, dark satire, cartoonish comic violence, outrageous excess, sharp revenge premises and non-explicit adult themes. All exported media clearly identifies AI fiction.
 2. No auto-sending WhatsApp/Signal/Telegram messages or reading private chats or contact lists. Native share sheet is the v1 integration.
 3. Commercial image model must have commercial rights. FLUX.2 Klein 4B Apache 2.0 is initial default; not 9B or dev open weights under non-commercial terms.
 4. Mock generation works without credentials. Real inference runs only from server-side secret env vars. Never claim mock data is a real provider result.
