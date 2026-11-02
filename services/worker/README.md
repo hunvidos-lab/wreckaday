@@ -1,6 +1,7 @@
-# Worker entry point
+# Retired queue worker
 
-Run `PYTHONPATH=services/api .venv/bin/python -m app.worker` from the repository root.
-The worker implementation lives in `services/api/app/worker.py` so the API and
-worker share the exact domain models, config, and transaction rules. They are
-separate processes, with no HTTP app import in the worker. See ADR 0001.
+The current development generation API handles requests in memory without a
+server job queue. `python -m app.worker` prints its disabled status and exits
+without connecting to Postgres or processing old queued jobs. See ADR 0003.
+A production generation queue/recovery design remains a release prerequisite.
+The original queue implementation is preserved in Git history.

@@ -1,25 +1,36 @@
+import { useEffect, useState } from "react";
 import { Stack } from "expo-router";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { SessionProvider } from "../src/session";
 import { StatusBar } from "expo-status-bar";
-const client = new QueryClient({
-  defaultOptions: {
-    queries: { retry: 1, staleTime: 10000 },
-    mutations: { retry: false },
-  },
-});
+import { Text } from "react-native";
+import { ComposerProvider } from "../src/composer";
+import { clearAssets } from "../src/local-images";
 export default function Layout() {
+  const [ready, setReady] = useState(false);
+  const [error, setError] = useState(false);
+  useEffect(() => {
+    clearAssets()
+      .then(() => setReady(true))
+      .catch(() => setError(true));
+  }, []);
+  if (!ready)
+    return (
+      <Text
+        style={{ color: "#f5f2ee", backgroundColor: "#09090b", padding: 40 }}
+      >
+        {error
+          ? "Could not clear the previous session cache. Restart the app to try again."
+          : "Opening Wreckaday…"}
+      </Text>
+    );
   return (
-    <QueryClientProvider client={client}>
-      <SessionProvider>
-        <StatusBar style="light" />
-        <Stack
-          screenOptions={{
-            headerShown: false,
-            contentStyle: { backgroundColor: "#141311" },
-          }}
-        />
-      </SessionProvider>
-    </QueryClientProvider>
+    <ComposerProvider>
+      <StatusBar style="light" />
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          contentStyle: { backgroundColor: "#09090b" },
+        }}
+      />
+    </ComposerProvider>
   );
 }

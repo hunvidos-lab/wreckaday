@@ -1,3 +1,7 @@
+> Historical server-based preview documentation. Superseded for the current app
+> by [ADR 0002](adr/0002-device-only-comeback-composer.md) and
+> [device-only validation](device-only-validation.md).
+
 # Gate report — 2026-11-01
 
 > Historical Gate 1 report. The founder subsequently changed the direction to still images, no added label on shared images, and a separate reveal. See the decision update in ADR 0001 for current behavior; the MP4 and watermark details below describe the earlier build.

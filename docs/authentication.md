@@ -1,3 +1,7 @@
+> Historical server-based preview documentation. Superseded for the current app
+> by [ADR 0002](adr/0002-device-only-comeback-composer.md) and
+> [device-only validation](device-only-validation.md).
+
 # Authentication and request flow
 
 ## Gate 1 (implemented development fixture)

@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "WRECKDAY Dev",
+    "name": "Wreckaday Studio Dev",
     "slug": "wreckday-dev",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "dark",
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "invalid.example.wreckday.dev"
@@ -19,7 +19,14 @@
     },
     "plugins": [
       "expo-router",
-      "expo-secure-store"
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Choose your reference photo. It is sent to the configured model providers only when you confirm and start generation.",
+          "cameraPermission": false,
+          "microphonePermission": false
+        }
+      ]
     ],
     "scheme": "wreckday-dev"
   }
