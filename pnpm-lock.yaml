@@ -102,6 +102,10 @@ importers:
       zod:
         specifier: ^4.3.6
         version: 4.6.7
+    devDependencies:
+      typescript:
+        specifier: ~6.0.3
+        version: 6.0.3
 
 packages:
 
