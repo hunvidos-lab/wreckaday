@@ -7,7 +7,7 @@ const fs=require('node:fs');
  const page=await browser.newPage({viewport:{width:1280,height:1000}});
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
  await page.goto('http://localhost:8081');
- await page.getByRole('button',{name:'Try a sample story',exact:true}).click();
+ await page.getByRole('button',{name:'View a sample',exact:true}).click();
  await expect(page.getByText('THE SAMPLE / NO ACCOUNT NEEDED')).toBeVisible();
  await page.getByRole('button',{name:'Make your own →'}).click();
  await page.getByLabel('FICTIONAL PROTAGONIST',{exact:true}).fill('Morgan');

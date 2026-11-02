@@ -20,7 +20,7 @@ No production or store release has occurred.
 - `models.py`, `worker.py`: Postgres transactions, immutable business-event keys,
   credit reservations/capture/refund, SKIP LOCKED claim, heartbeat/lease recovery,
   bounded attempts and stale-worker/deletion protections. DB reconnect loop.
-- `providers.py`, `render.py`: typed mock provider boundary, deterministic original
+- `providers.py`, `render.py`: typed mock provider boundary, pre-rendered sample
   artwork, captions/reveal and visible labels, captioned PNGs, 11-second H.264 MP4.
 - `media.py`: five-minute HMAC media capabilities; no public file mount.
 - `services/api/migrations`: reversible schema. `packages/contracts`: Zod, API
@@ -71,7 +71,7 @@ task's browser download and build caches, Postgres recovered and tests passed.
 
 Live locally: Postgres, JWT verification, ownership checks, transactional credits,
 queue/worker, Pillow/FFmpeg, MP4/PNG downloads, editing, deletion and browser UI.
-Mock: original illustrations, story writing, shared development accounts and
+Mock: a pre-rendered sample image repeated across all three frames, story writing, shared development accounts and
 credits. Settings are saved; the mock visual narrative remains deterministic.
 Native share code is implemented but has not been exercised on physical devices.
 

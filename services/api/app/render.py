@@ -1,9 +1,9 @@
-"""Original procedural fixture artwork; never presented as inference output."""
+"""Pre-rendered mock fixture artwork; never presented as live inference output."""
 
 import subprocess
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 FONT = Path(__file__).parent / "fonts" / "DejaVuSans.ttf"
 BOLD = Path(__file__).parent / "fonts" / "DejaVuSans-Bold.ttf"
@@ -14,78 +14,21 @@ def font(size, bold=False):
 
 
 def fixture(index: int):
-    im = Image.new("RGB", (1080, 1920), "#1d2525")
+    """Use one clearly labeled static sample for all three mock frames."""
+    if index not in (0, 1, 2):
+        raise ValueError("Invalid fixture index")
+    source = Path(__file__).parent / "assets" / "editorial-sample.png"
+    with Image.open(source) as image:
+        im = ImageOps.fit(image.convert("RGB"), (1080, 1920), method=Image.Resampling.LANCZOS)
     d = ImageDraw.Draw(im)
-    # Editorial architectural illustration: the same room and cast in all three beats.
-    for y in range(1920):
-        t = y / 1920
-        d.line((0, y, 1080, y), fill=(int(36 + 45 * t), int(48 + 38 * t), int(46 + 27 * t)))
-    d.polygon([(0, 340), (760, 460), (760, 1420), (0, 1580)], fill="#c9bca3")
-    d.polygon([(760, 460), (1080, 245), (1080, 1510), (760, 1420)], fill="#8f9687")
-    d.polygon([(0, 1580), (760, 1420), (1080, 1510), (1080, 1920), (0, 1920)], fill="#594b3c")
-    for n in range(9):
-        d.line((0, 1580 + n * 70, 1080, 1490 + n * 90), fill="#71604d", width=3)
-    d.rectangle((75, 590, 340, 1140), fill="#566b68", outline="#eee1c8", width=15)
-    d.line((207, 590, 207, 1140), fill="#eee1c8", width=9)
-    d.line((75, 880, 340, 880), fill="#eee1c8", width=9)
-    d.ellipse((130, 665, 265, 800), fill="#d7d8ba")
-    d.rectangle((825, 570, 1000, 1370), fill="#303c38", outline="#c5b69a", width=12)
-    d.rounded_rectangle((40, 1290, 450, 1570), 35, fill="#a4523b")
-    d.rounded_rectangle((25, 1360, 470, 1550), 30, fill="#b96448")
-    d.rectangle((48, 1540, 70, 1610), fill="#282a28")
-    d.rectangle((420, 1540, 442, 1610), fill="#282a28")
-
-    # Tall adult fiancée and shorter adult partner, rendered as deliberate silhouettes.
-    def person(x, y, height, coat, tilt=0):
-        head = int(height * 0.105)
-        d.ellipse((x - head // 2 + tilt, y, x + head // 2 + tilt, y + head * 1.25), fill="#e1b997")
-        d.pieslice(
-            (x - head // 2 - 7 + tilt, y - 9, x + head // 2 + 9 + tilt, y + head * 1.3),
-            180,
-            355,
-            fill="#382b27",
-        )
-        d.polygon(
-            [
-                (x - 55, y + head),
-                (x + 55, y + head),
-                (x + 85, y + height * 0.72),
-                (x - 80, y + height * 0.72),
-            ],
-            fill=coat,
-        )
-        d.line((x - 30, y + height * 0.69, x - 35, y + height), fill="#202b2b", width=36)
-        d.line((x + 30, y + height * 0.69, x + 40, y + height), fill="#202b2b", width=36)
-        d.line((x - 50, y + head + 30, x - 105, y + height * 0.53), fill=coat, width=30)
-        d.line((x + 50, y + head + 30, x + 100, y + height * 0.53), fill=coat, width=30)
-
-    if index == 0:
-        person(685, 640, 980, "#202c30")
-        person(490, 1040, 590, "#cd793c")
-    elif index == 1:
-        person(685, 610, 1000, "#202c30", -28)
-        person(475, 1020, 600, "#cd793c")
-        d.rounded_rectangle((790, 1390, 940, 1640), 16, fill="#bd834b", outline="#e2be7e", width=5)
-        d.rectangle((835, 1320, 890, 1390), outline="#d2bf9e", width=10)
-        d.rectangle((740, 1460, 830, 1610), fill="#c8b18e")
-    else:
-        d.polygon([(450, 390), (780, 440), (850, 200), (530, 180)], fill="#dde2c7")
-        d.line((450, 390, 780, 440, 850, 200), fill="#292f2d", width=14)
-        person(665, 350, 1260, "#202c30")
-        person(440, 1030, 590, "#cd793c")
-        d.line((920, 1100, 800, 1650), fill="#c39153", width=20)
-        d.line((990, 1100, 1010, 1650), fill="#c39153", width=20)
-        for n in range(6):
-            yy = 1130 + n * 85
-            d.line((915 - n * 18, yy, 990 + n * 3, yy), fill="#c39153", width=13)
-    d.rounded_rectangle((54, 64, 700, 125), 12, fill="#151b1b")
-    d.text((76, 77), "MOCK FIXTURE / ORIGINAL ILLUSTRATION", font=font(24), fill="#dbe795")
+    d.rectangle((0, 0, 1080, 75), fill="#141311")
+    d.text((50, 22), "PRE-RENDERED SAMPLE  /  MOCK", font=font(25), fill="#f2ebe0")
     watermark(d)
     return im
 
 
 def watermark(d):
-    d.rectangle((0, 1800, 1080, 1920), fill="#121818")
+    d.rectangle((0, 1800, 1080, 1920), fill="#141311")
     d.text((55, 1840), "AI FICTION  •  WRECKDAY", font=font(32, True), fill="#e8eadf")
 
 
@@ -108,7 +51,7 @@ def captioned(im, caption):
     d = ImageDraw.Draw(im)
     lines = wrap_pixels(caption, d, font(54, True))
     yy = 1460 - max(0, len(lines) - 2) * 60
-    d.rectangle((0, yy - 40, 1080, 1800), fill="#151b1b")
+    d.rectangle((0, yy - 40, 1080, 1800), fill="#211e1b")
     for line in lines:
         d.text((60, yy), line, font=font(54, True), fill="#f5f1e7")
         yy += 74
@@ -124,9 +67,9 @@ def render(directory: Path, frames: list, reveal: str, output: Path):
         card = directory / f"card-{index}.png"
         captioned(im, frame["caption"]).save(card)
         inputs.append(card)
-    end = Image.new("RGB", (1080, 1920), "#141a19")
+    end = Image.new("RGB", (1080, 1920), "#141311")
     d = ImageDraw.Draw(end)
-    d.text((65, 430), "WRECKDAY", font=font(100, True), fill="#d5ec7b")
+    d.text((65, 430), "WRECKDAY", font=font(100, True), fill="#d1a095")
     d.text((70, 590), "FICTION. WITH CONSEQUENCES.", font=font(29), fill="#f5f1e7")
     yy = 850
     for line in wrap_pixels(reveal, d, font(51, True)):

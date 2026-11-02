@@ -8,10 +8,11 @@ worker process. Keep shared models and worker code in the API Python package to
 avoid circular imports and packaging overhead. `services/worker` documents the
 entry point; no Redis or new paid services.
 
-Use original procedural editorial illustrations for credential-free fixtures.
-They are explicitly labeled MOCK and AI FICTION, not represented as photorealistic
-model results. The text, image generation, and render plumbing are exercised;
-live-provider quality cannot be evaluated with these fixtures.
+The development preview uses one pre-rendered AI-fiction editorial sample image,
+repeated for all three frames. It is clearly labeled as a mock fixture and never
+represented as a live inference result. The repeat means this preview does not
+demonstrate scene progression or live-provider quality. The original procedural
+illustrations were replaced during the visual refresh.
 
 Dev accounts Alex and Sam are shared, non-private testing fixtures. Tokens are
 HS256 JWTs with an eight-hour expiry, fixed audience and issuer. The known default

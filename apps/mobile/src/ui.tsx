@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import {
   Image,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -12,23 +13,28 @@ import {
 import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 export const color = {
-  bg: "#101713",
-  panel: "#1b241e",
-  line: "#334032",
-  text: "#f4f0e6",
-  muted: "#acb5a6",
-  acid: "#d9ef89",
-  red: "#e59c83",
+  bg: "#141311",
+  panel: "#211e1b",
+  line: "#49413b",
+  text: "#f2ebe0",
+  muted: "#beb2a4",
+  acid: "#d1a095",
+  red: "#edb9ab",
 };
+const editorialSerif = Platform.select({
+  ios: "Georgia",
+  android: "serif",
+  default: "Georgia, serif",
+});
 export const styles = StyleSheet.create({
   page: { flex: 1, backgroundColor: color.bg },
   content: {
     width: "100%",
-    maxWidth: 1040,
+    maxWidth: 1120,
     alignSelf: "center",
     padding: 24,
-    paddingBottom: 60,
-    gap: 22,
+    paddingBottom: 72,
+    gap: 24,
   },
   nav: {
     flexDirection: "row",
@@ -42,22 +48,24 @@ export const styles = StyleSheet.create({
   },
   brand: {
     color: color.text,
-    fontSize: 25,
-    fontWeight: "900",
-    letterSpacing: -1.5,
+    fontSize: 22,
+    fontWeight: "800",
+    letterSpacing: 2,
   },
   title: {
     color: color.text,
-    fontSize: 52,
-    fontWeight: "900",
-    letterSpacing: -2,
+    fontSize: 50,
+    fontWeight: "400",
+    fontFamily: editorialSerif,
+    letterSpacing: -1.4,
     lineHeight: 55,
   },
   heading: {
     color: color.text,
-    fontSize: 26,
-    fontWeight: "800",
-    letterSpacing: -0.7,
+    fontSize: 27,
+    fontWeight: "400",
+    fontFamily: editorialSerif,
+    letterSpacing: -0.4,
   },
   body: { color: color.muted, fontSize: 16, lineHeight: 25 },
   small: {
@@ -68,13 +76,13 @@ export const styles = StyleSheet.create({
   },
   eyebrow: {
     color: color.acid,
-    fontSize: 12,
-    fontWeight: "800",
-    letterSpacing: 2,
+    fontSize: 11,
+    fontWeight: "700",
+    letterSpacing: 2.2,
   },
   panel: {
     backgroundColor: color.panel,
-    borderRadius: 18,
+    borderRadius: 3,
     padding: 22,
     gap: 16,
     borderWidth: 1,
@@ -90,12 +98,12 @@ export const styles = StyleSheet.create({
     minHeight: 50,
     paddingHorizontal: 23,
     paddingVertical: 15,
-    borderRadius: 10,
-    backgroundColor: color.acid,
+    borderRadius: 2,
+    backgroundColor: "#a75143",
     alignItems: "center",
     justifyContent: "center",
   },
-  buttonText: { color: color.bg, fontWeight: "800", fontSize: 15 },
+  buttonText: { color: "#fff8f1", fontWeight: "700", fontSize: 14 },
   secondary: {
     backgroundColor: color.panel,
     borderWidth: 1,
@@ -106,13 +114,13 @@ export const styles = StyleSheet.create({
     backgroundColor: color.bg,
     borderColor: color.line,
     borderWidth: 1,
-    borderRadius: 10,
+    borderRadius: 2,
     padding: 15,
     minHeight: 50,
     fontSize: 16,
   },
   card: {
-    borderRadius: 16,
+    borderRadius: 3,
     overflow: "hidden",
     backgroundColor: color.panel,
     borderColor: color.line,
@@ -248,11 +256,10 @@ export function ErrorText({ error }: { error: unknown }) {
     </Text>
   ) : null;
 }
-export const fixtures = [
-  require("../assets/fixtures/frame-0.png"),
-  require("../assets/fixtures/frame-1.png"),
-  require("../assets/fixtures/frame-2.png"),
-] as ImageSourcePropType[];
+// One pre-rendered image is deliberately reused in the development preview.
+const sampleImage =
+  require("../assets/fixtures/editorial-sample.png") as ImageSourcePropType;
+export const fixtures = [sampleImage, sampleImage, sampleImage];
 export function FrameCard({
   source,
   caption,
@@ -269,7 +276,7 @@ export function FrameCard({
           source={source}
           style={{ position: "absolute", width: "100%", height: "100%" }}
           resizeMode="contain"
-          accessibilityLabel={label ?? "Illustrated fictional apartment scene"}
+          accessibilityLabel={label ?? "Pre-rendered fictional apartment scene"}
         />
       </View>
       <View style={{ padding: 16, gap: 9 }}>
@@ -278,7 +285,8 @@ export function FrameCard({
           style={{
             color: color.text,
             fontSize: 22,
-            fontWeight: "800",
+            fontFamily: editorialSerif,
+            fontWeight: "400",
             lineHeight: 27,
           }}
         >

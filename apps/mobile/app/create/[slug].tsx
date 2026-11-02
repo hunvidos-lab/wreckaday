@@ -147,8 +147,9 @@ export default function Create() {
             <View style={styles.panel}>
               <Text style={styles.heading}>Ready for the consequences?</Text>
               <Text style={styles.body}>
-                3 demo credits. Original mock illustrations. No provider calls
-                or real charges. Every frame and export is labeled AI FICTION.
+                3 demo credits. A pre-rendered sample image repeats in each
+                frame. No provider calls or real charges. Every frame and export
+                is labeled AI FICTION.
               </Text>
               <Button
                 disabled={

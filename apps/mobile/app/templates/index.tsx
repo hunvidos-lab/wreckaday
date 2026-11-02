@@ -19,10 +19,10 @@ export default function Templates() {
   });
   return (
     <Page>
-      <Text style={styles.eyebrow}>GOOD STORIES. TERRIBLE JUDGMENT.</Text>
-      <Text style={styles.title}>Pick your{"\n"}downfall.</Text>
+      <Text style={styles.eyebrow}>THE WRECKDAY COLLECTION / 01</Text>
+      <Text style={styles.title}>Stories with{"\n"}consequences.</Text>
       <Text style={styles.body}>
-        A little romance. A little renovation. Absolutely no sensible decisions.
+        A collection of beautifully ill-advised fictional scenarios.
       </Text>
       <ErrorText error={query.error} />
       {query.isError && (

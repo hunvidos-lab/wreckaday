@@ -6,6 +6,9 @@ export default function Examples() {
     <Page back>
       <Text style={styles.eyebrow}>THE SAMPLE / NO ACCOUNT NEEDED</Text>
       <Text style={styles.title}>She’s moving in.</Text>
+      <Text style={styles.small}>
+        PRE-RENDERED SAMPLE · THE SAME IMAGE IS REPEATED IN THIS PREVIEW
+      </Text>
       <View
         style={{ gap: 18, maxWidth: 480, width: "100%", alignSelf: "center" }}
       >

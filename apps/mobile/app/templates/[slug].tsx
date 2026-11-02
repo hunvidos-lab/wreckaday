@@ -34,8 +34,8 @@ export default function Detail() {
         onPress={() => router.push("/examples")}
       />
       <Text style={styles.small}>
-        Fictional adults only. Mock illustrations, not photorealistic AI output.
-        No uploads in this preview.
+        Fictional adults only. This preview repeats one pre-rendered image; no
+        live generation or uploads.
       </Text>
     </Page>
   );

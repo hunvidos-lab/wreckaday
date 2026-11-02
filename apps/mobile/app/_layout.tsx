@@ -16,7 +16,7 @@ export default function Layout() {
         <Stack
           screenOptions={{
             headerShown: false,
-            contentStyle: { backgroundColor: "#101713" },
+            contentStyle: { backgroundColor: "#141311" },
           }}
         />
       </SessionProvider>
