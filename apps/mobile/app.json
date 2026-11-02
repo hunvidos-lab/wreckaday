@@ -1,0 +1,26 @@
+{
+  "expo": {
+    "name": "WRECKDAY Dev",
+    "slug": "wreckday-dev",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "invalid.example.wreckday.dev"
+    },
+    "android": {
+      "package": "invalid.example.wreckday.dev"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "single"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store"
+    ],
+    "scheme": "wreckday-dev"
+  }
+}

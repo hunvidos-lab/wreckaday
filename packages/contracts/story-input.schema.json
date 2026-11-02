@@ -1,0 +1,61 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "cast_mode": {
+      "const": "fictional",
+      "default": "fictional",
+      "title": "Cast Mode",
+      "type": "string"
+    },
+    "custom_details": {
+      "default": "",
+      "maxLength": 240,
+      "title": "Custom Details",
+      "type": "string"
+    },
+    "frame_count": {
+      "const": 3,
+      "default": 3,
+      "title": "Frame Count",
+      "type": "integer"
+    },
+    "name": {
+      "default": "Alex",
+      "maxLength": 32,
+      "minLength": 1,
+      "title": "Name",
+      "type": "string"
+    },
+    "photo_realism": {
+      "default": 85,
+      "maximum": 100,
+      "minimum": 0,
+      "title": "Photo Realism",
+      "type": "integer"
+    },
+    "satire_intensity": {
+      "default": 80,
+      "maximum": 100,
+      "minimum": 0,
+      "title": "Satire Intensity",
+      "type": "integer"
+    },
+    "setting": {
+      "default": "our city apartment",
+      "maxLength": 100,
+      "minLength": 1,
+      "title": "Setting",
+      "type": "string"
+    },
+    "template_slug": {
+      "const": "seven-foot-fiancee",
+      "title": "Template Slug",
+      "type": "string"
+    }
+  },
+  "required": [
+    "template_slug"
+  ],
+  "title": "StoryInput",
+  "type": "object"
+}

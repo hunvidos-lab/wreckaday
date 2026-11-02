@@ -1,0 +1,15 @@
+[project]
+name = "wreckday-api"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = ["fastapi", "uvicorn[standard]", "sqlalchemy>=2", "psycopg[binary]", "alembic", "pydantic-settings", "pillow", "PyJWT", "httpx"]
+[tool.ruff]
+line-length = 110
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I", "UP", "B"]
+ignore = ["B008"]
+[tool.ruff.lint.per-file-ignores]
+"tests/conftest.py" = ["E402", "I001"]

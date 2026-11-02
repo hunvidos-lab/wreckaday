@@ -1,0 +1,79 @@
+[
+  {
+    "input": {
+      "template_slug": "seven-foot-fiancee"
+    },
+    "valid": true
+  },
+  {
+    "input": {
+      "template_slug": "seven-foot-fiancee",
+      "name": "  Alex  ",
+      "satire_intensity": 100,
+      "photo_realism": 0
+    },
+    "valid": true
+  },
+  {
+    "input": {
+      "template_slug": "unknown"
+    },
+    "valid": false
+  },
+  {
+    "input": {
+      "template_slug": "seven-foot-fiancee",
+      "name": ""
+    },
+    "valid": false
+  },
+  {
+    "input": {
+      "template_slug": "seven-foot-fiancee",
+      "satire_intensity": 101
+    },
+    "valid": false
+  },
+  {
+    "input": {
+      "template_slug": "seven-foot-fiancee",
+      "frame_count": 5
+    },
+    "valid": false
+  },
+  {
+    "input": {
+      "template_slug": "seven-foot-fiancee",
+      "cast_mode": "self"
+    },
+    "valid": false
+  },
+  {
+    "input": {
+      "template_slug": "seven-foot-fiancee",
+      "unexpected": "field"
+    },
+    "valid": false
+  },
+  {
+    "input": {
+      "template_slug": "seven-foot-fiancee",
+      "photo_realism": 3.5
+    },
+    "valid": false
+  },
+  {
+    "input": {
+      "template_slug": "seven-foot-fiancee",
+      "photo_realism": true
+    },
+    "valid": false
+  },
+  {
+    "input": {
+      "template_slug": "seven-foot-fiancee",
+      "satire_intensity": "80"
+    },
+    "valid": false
+  }
+]
