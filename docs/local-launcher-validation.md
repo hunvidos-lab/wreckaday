@@ -86,6 +86,14 @@ static browser check used `WRECKADAY_WEB_ORIGIN=http://localhost:8082`.
 Screenshot: ignored `work/browser/key-console-mobile.png`; gallery/result artifacts
 remain under `work/browser/payback-*`.
 
+The CI browser check additionally waits for navigation before interacting and
+scopes form actions to the visible screen. Expo Router may retain multiple hidden
+forms; the test separately asserts that **all** copies cleared pasted key values.
+To run it alongside a live founder session without stopping that app, set
+`WRECKDAY_TEST_API_PORT=8100 WRECKDAY_TEST_WEB_PORT=8181`. A normal Terminal
+`pnpm dev` launch was also checked in a browser: home and Setup render without
+page errors, and that session remains running until the founder closes Terminal.
+
 ## Real versus mocked; costs and remaining founder steps
 
 The launcher, browser, file writes, authentication, settings reload, and key
