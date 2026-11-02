@@ -1,7 +1,7 @@
-from datetime import date
 import base64
 import io
 import json
+from datetime import date
 from decimal import Decimal
 
 import httpx
@@ -35,6 +35,7 @@ def payload(package="flicker"):
 def configuration(**overrides):
     values = dict(
         _env_file=None,
+        budget_database_url="sqlite:///:memory:",
         live_generation_enabled=True,
         text_endpoint="https://text.invalid/v1/chat/completions",
         text_api_key="secret-text-fixture",

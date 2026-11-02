@@ -37,7 +37,8 @@ PYTHONPATH=services/api .venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8
 ```
 
 Keep this development service on a trusted machine. It does not implement public
-production authentication, purchase entitlements or durable distributed budgets.
+production authentication or purchase entitlements. Its budget ledger is durable,
+but the service remains a development preview.
 
 ## Configure models in .env
 
@@ -70,10 +71,26 @@ substitute a mock/image/model. There is no jailbreak/safety-bypass switch.
 
 The conservative per-story reservation is `text ceiling + scenes × image ceiling`.
 It remains reserved on failure because provider charges may already have occurred.
-Actual cost is returned as unknown, not equated to the reservation. Limits and
-request-ID records are in memory and reset on restart; this is development cost
-control, not production billing. Restarting/multiple processes must not be used
-to enforce a real global spending cap.
+Daily reservations and hashed request IDs are durable in a separate content-free
+ledger (default `work/generation-ledger.sqlite3`). Set `WRECKDAY_DAILY_BUDGET_USD`
+for the UTC-day cap. Multiple processes must use the same ledger; production-style
+shared reservations can use `WRECKDAY_BUDGET_DATABASE_URL=postgresql+psycopg://...`.
+Session limits/request counts remain process-local. Unknown/failed charges keep
+their reservations; observed overruns increase the hold. A ceiling is an operator
+estimate, not a provider-enforced billing limit.
+
+Both text requests record measured tokens. The configured Cloudflare Llama model
+uses its published tariff; other models need explicit per-million-token rates.
+fal request IDs/units are recorded and reconciled with request-filtered billing
+events. `actual_cost_usd` is populated only when all calls have a known cost; its
+basis is gross provider usage before account free allowances and tax, not a net
+invoice. Missing usage or delayed/unauthorized billing remains `pending`, never
+zero or the ceiling. See [cost ledger operations](docs/generation-accounting.md)
+for migration, reconciliation and pricing sources. No paid call is retried.
+
+Before restarting an existing live server with a new ledger, seed known earlier
+reservations using that guide. Historical in-memory spend cannot be reconstructed
+automatically. This change leaves the running server and local `.env` untouched.
 
 ## Photo and content processing
 
@@ -84,6 +101,8 @@ Only the premise goes to the text model; photo and scene prompts go to the image
 provider. Provider hosts are disclosed in the generation screen. Their retention
 policies apply. This revises the earlier device-only architecture, as requested.
 
+The ledger stores reservation totals, hashed request IDs and whitelisted provider
+usage/cost metadata; it never stores photos, premises, scene prompts or captions.
 No story database, content logs, content files, public photo URLs, recipient page,
 anonymous delivery, analytics, recipient tracking or background sending. Former
 `/v1` routes remain retired. Text guardrails/review and provider-default safety are
@@ -130,7 +149,8 @@ address for native testing; do not expose this development API publicly.
 
 ## Evidence and decisions
 
-- [Current validation](docs/payback-validation.md)
+- [Handoff follow-through and validation](docs/codex-follow-through.md)
+- [Earlier payback validation](docs/payback-validation.md)
 - [Provider/model investigation, including steerable fine-tunes](docs/model-evaluation.md)
 - [ADR 0003: founder's updated direction](docs/adr/0003-payback-reference-photo-generation.md)
 - [Image assets and final prompts](docs/assets/payback-image-prompts.md)

@@ -35,8 +35,9 @@ export default function Privacy() {
           and premise. It sends the premise to the configured text model and the
           photo with scene instructions to the image model. The generation
           screen identifies their hosts before you agree. Their retention
-          policies apply. The server processes content in memory without a
-          database, content logs or saved media files.
+          policies apply. The server processes creative content in memory
+          without content logs or saved media files. It retains budget totals
+          and provider usage records, without your photo, premise or captions.
         </Text>
       </View>
       <View style={styles.panel}>

@@ -34,12 +34,26 @@ class GenerationSettings(BaseSettings):
     session_budget_usd: Decimal = Field(default=Decimal("0"), ge=0)
     # Optional rolling cap per UTC day, applied on top of the process-lifetime session budget.
     daily_budget_usd: Decimal | None = Field(default=None, gt=0)
+    # Separate content-free ledger; never use the retired story database.
+    budget_database_url: SecretStr = SecretStr(
+        f"sqlite:///{ENV_FILE.parent / 'work/generation-ledger.sqlite3'}"
+    )
+    text_input_usd_per_million: Decimal | None = Field(default=None, ge=0)
+    text_output_usd_per_million: Decimal | None = Field(default=None, ge=0)
+    fal_billing_api_key: SecretStr = SecretStr("")
     text_cost_ceiling_usd: Decimal | None = Field(default=None, ge=0)
     image_cost_ceiling_usd: Decimal | None = Field(default=None, ge=0)
     max_generation_requests: int = Field(default=3, ge=1, le=10)
     cors_origins: str = "http://localhost:8081,http://localhost:8082"
 
-    @field_validator("text_cost_ceiling_usd", "image_cost_ceiling_usd", "daily_budget_usd", mode="before")
+    @field_validator(
+        "text_cost_ceiling_usd",
+        "image_cost_ceiling_usd",
+        "daily_budget_usd",
+        "text_input_usd_per_million",
+        "text_output_usd_per_million",
+        mode="before",
+    )
     @classmethod
     def empty_ceiling(cls, value):
         return None if value == "" else value

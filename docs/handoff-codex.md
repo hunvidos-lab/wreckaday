@@ -1,5 +1,8 @@
 # Handoff to Codex — changes made by Claude Code on 2026-11-02
 
+Follow-through: [Codex implementation and validation](codex-follow-through.md).
+The sections below preserve the original handoff snapshot; see that report for current status.
+
 Branch: `feat/redesign-live-providers` (pushed, one squashed commit on `origin/main`).
 The unsquashed history is in the founder's local branch `feat/modern-redesign`.
 Read `WRECKDAY_MASTER_SPEC.md` and `CLAUDE.md` as before; they still govern.

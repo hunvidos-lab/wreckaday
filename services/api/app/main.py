@@ -1,4 +1,4 @@
-"""Opt-in development reference-photo service. No accounts, database or media storage."""
+"""Opt-in development reference-photo service. No accounts or media storage; content-free budget metadata is durable."""
 
 import json
 from urllib.parse import urlsplit
@@ -67,7 +67,7 @@ def capabilities():
     return {
         "data": {
             "generation_available": settings.configured,
-            "photo_processing": f"This development server processes your photo and premise in memory. Your premise is sent to {text_host}; your reference photo and scene prompts are sent to {image_host}. Their retention policies apply. This server does not save content to disk.",
+            "photo_processing": f"This development server processes your photo and premise in memory. Your premise is sent to {text_host}; your reference photo and scene prompts are sent to {image_host}. Their retention policies apply. This server does not save photos, premises or generated scenes to disk. It retains content-free budget and provider-usage metadata.",
         }
     }
 
