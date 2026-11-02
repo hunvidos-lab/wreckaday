@@ -13,6 +13,92 @@ $29.99 USD are proposed one-time prices for 1 / 3 / 5 scenes. Checkout is not
 connected. The reference photo belongs to the uploader; the fiction label and
 reveal stay on every export. Sharing uses the user's chosen messaging identity.
 
+## Start with one command or a Desktop icon
+
+Prerequisites: Node.js **24.x**, pnpm **11.25**, and [uv](https://docs.astral.sh/uv/getting-started/installation/).
+The launcher installs missing project dependencies and Python 3.12, starts the API
+and web app, opens your browser, and shows status. Existing `.env` settings are preserved.
+
+Create the Desktop shortcut once (run this yourself):
+
+```sh
+bash scripts/make-desktop-launcher.sh
+```
+
+1. Double-click **Wreckaday** on the Desktop, or run `pnpm dev` in this repo.
+2. First time only, if macOS blocks the `.command` file: right-click → **Open** → **Open**.
+3. To add keys, copy the **Key console token** from the Terminal window. Click
+   **Setup** in the app header and paste it to unlock. The link then becomes
+   **Keys**. Paste your keys, set the endpoints/model and cost ceilings, **Save**,
+   then **Test text key** and **Test image key**. Blank key fields keep saved keys;
+   only the final four characters are shown. Saves take effect immediately.
+4. Spending limit: **$2/day by default**, via `WRECKDAY_DAILY_BUDGET_USD`, with
+   conservative reservations in the durable ledger. Existing explicit values are
+   preserved. Enabling live generation permits paid story calls; the Test buttons
+   do not submit inference. Keep ceilings aligned with your provider's current quote.
+5. To stop, close the Terminal window or press **Ctrl+C**. Both servers stop.
+
+The local development console is enabled by `pnpm dev` only, with a new password
+for each launch; the password stays in Terminal/process memory, outside `.env` and
+log files. API keys are saved to the server's `.env` with mode 600. They are never
+returned in full or saved in app storage, and pasted values clear on save or when
+leaving the form. The console is unavailable in release builds and to non-loopback
+clients. A normal manual API launch keeps it disabled by default.
+
+If ports 8000/8081 are occupied, the launcher explains which one and stops without
+killing anything. Logs are in `work/logs/`. Moving this repo requires recreating
+the Desktop command. Before the first ledger-backed restart of an older live API,
+follow the [budget migration guide](docs/generation-accounting.md).
+
+## Getting keys
+
+Links opened and official setup guidance checked **2026-11-02**. Provider dashboards
+require login, so private dashboard layouts could not be inspected directly;
+the menu labels below follow their current public documentation.
+
+1. **Cloudflare Workers AI — text, current choice.** Open the
+   [Cloudflare dashboard](https://dash.cloudflare.com), select **AI → Workers AI**,
+   then **Use REST API → Create a Workers AI API Token**. Review/create/copy the
+   token and copy the **Account ID** on that page. A custom token needs both
+   **Workers AI – Read** and **Workers AI – Edit**. Paste the token as Text API key;
+   endpoint `https://api.cloudflare.com/client/v4/accounts/<ACCOUNT_ID>/ai/v1/chat/completions`,
+   model `@cf/meta/llama-3.3-70b-instruct-fp8-fast`.
+   [Official setup](https://developers.cloudflare.com/workers-ai/get-started/rest-api/).
+   There is a daily free allocation shared at account level; a separate project
+   token does not create another allowance. The existing token shares an account
+   with Aether Forge; separate project tokens are easier to manage.
+   [Pricing and allocation](https://developers.cloudflare.com/workers-ai/platform/pricing/).
+2. **fal — images, current choice, paid per image.** Open
+   [API Keys](https://fal.ai/dashboard/keys), select your account/team, click
+   **Create Key** (the handoff's older label was “Add key”), and copy it immediately.
+   Start with the **API** permission preset and add billing credit before generating.
+   Provider `fal`, endpoint `https://fal.run/fal-ai/flux-2/klein/4b/edit`.
+   [Official key setup](https://fal.ai/docs/documentation/setting-up/authentication).
+   The app's Test button submits only empty invalid input to this exact edit
+   endpoint: 422 confirms the validation check; 401/403 rejects the key. It does
+   not test image quality, credit balance or successful generation.
+3. **Black Forest Labs — alternative image host.** Open the
+   [dashboard](https://dashboard.bfl.ai), then [Get started](https://dashboard.bfl.ai/get-started)
+   and **Create Key**, selecting the intended organization. Provider `bfl`, endpoint
+   `https://api.bfl.ai/v1/flux-2-klein-4b`.
+   [Official key instructions](https://github.com/black-forest-labs/skills/blob/master/skills/bfl-api/references/api-key-setup.md).
+   The console reports this host as not testable without a paid call; it does not
+   submit a generation just to validate the key.
+4. **OpenRouter — alternative text host.** Open
+   [Keys](https://openrouter.ai/settings/keys), which now redirects through login
+   to the selected workspace's Keys page. Select the intended workspace and
+   create/copy a project key. Endpoint `https://openrouter.ai/api/v1/chat/completions`,
+   model `meta-llama/llama-3.3-70b-instruct`.
+   [Official developer setup](https://openrouter.ai/developers),
+   [workspace key organization](https://openrouter.ai/docs/guides/features/workspaces/overview).
+   The earlier handoff reported a shared OpenRouter key returning 401; obtain a
+   valid new project key for this alternative. The Test button reads key status,
+   without submitting chat.
+
+Use the commercially permitted **FLUX.2 Klein 4B** configuration, not the
+non-commercial 9B/dev weight variants. Other providers need an ADR and founder
+approval. Never paste API keys into chat, source code, or `EXPO_PUBLIC_*` variables.
+
 ## Run the preview
 
 Node 24, pnpm 11.25; Python 3.12 for the optional generation API.

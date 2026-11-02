@@ -388,7 +388,11 @@ def test_inferno_allows_comic_violence_and_profanity_others_do_not():
 
 
 def test_floor_ignores_innocent_lookalike_words():
-    for text in ("A minor detail: I bought the restaurant", "My childhood bully sees my penthouse", "Just kidding"):
+    for text in (
+        "A minor detail: I bought the restaurant",
+        "My childhood bully sees my penthouse",
+        "Just kidding",
+    ):
         check_text(text, "flicker")
 
 

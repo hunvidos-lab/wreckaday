@@ -20,6 +20,7 @@ const apiOrigin = 'http://localhost:8000';
     await page.route(`${apiOrigin}/v2/**`, async route => {
       if (route.request().method() === 'OPTIONS') { await route.fulfill({ status: 204, headers: { 'Access-Control-Allow-Origin': new URL(origin).origin, 'Access-Control-Allow-Methods': 'GET, POST', 'Access-Control-Allow-Headers': 'Content-Type, Idempotency-Key' } }); return; }
       if (route.request().url().endsWith('/capabilities')) { await route.fulfill({ headers: cors, json: { data: { generation_available: available, photo_processing: 'Test provider: your photo is processed only after you agree and start generation.' } } }); return; }
+      if (route.request().url().includes('/v2/dev/keys')) { await route.fulfill({ status: 404, headers: cors, json: { error: { message: 'Console disabled in this test.' } } }); return; }
       const body = route.request().postDataJSON();
       expect(body.photo_data_url).toMatch(/^data:image\/(png|jpeg|webp);base64,/);
       expect(body.adult_confirmed && body.own_photo_confirmed && body.provider_processing_confirmed).toBe(true);
