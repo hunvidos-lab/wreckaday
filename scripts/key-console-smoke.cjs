@@ -52,6 +52,7 @@ async function waitFor(url, child) {
     await page.goto('http://localhost:8081');
     await expect(page.getByRole('link', { name: 'Keys', exact: true })).toHaveCount(0);
     await page.getByRole('link', { name: 'Setup', exact: true }).click();
+    await page.waitForURL('http://localhost:8081/dev-keys');
     await expect(page.getByLabel('Text API key', { exact: true })).toHaveCount(0);
     await page.getByLabel('Console token', { exact: true }).fill('wrong-test-password');
     await page.getByRole('button', { name: 'Unlock console', exact: true }).click();
@@ -81,10 +82,16 @@ async function waitFor(url, child) {
     await page.screenshot({ path: 'work/browser/key-console-mobile.png', fullPage: true });
     await page.getByLabel('Text API key', { exact: true }).fill('unsaved-should-disappear');
     await page.getByRole('link', { name: 'Wreckaday home', exact: true }).click();
+    await page.waitForURL('http://localhost:8081/');
+    await expect(page.getByRole('button', { name: 'Choose Flicker', exact: true })).toBeVisible();
     await page.getByRole('link', { name: 'Keys', exact: true }).click();
+    await page.waitForURL('http://localhost:8081/dev-keys');
     await expect(page.getByLabel('Text API key', { exact: true })).toHaveValue('');
     await page.getByRole('link', { name: 'Wreckaday home', exact: true }).click();
+    await page.waitForURL('http://localhost:8081/');
+    await expect(page.getByRole('button', { name: 'Choose Flicker', exact: true })).toBeVisible();
     await page.getByRole('button', { name: 'Choose Flicker', exact: true }).click();
+    await page.waitForURL('http://localhost:8081/compose');
     const chooser = page.waitForEvent('filechooser');
     await page.getByRole('button', { name: 'Choose my photo', exact: true }).click();
     await (await chooser).setFiles('apps/mobile/assets/examples/penthouse.png');
@@ -94,6 +101,7 @@ async function waitFor(url, child) {
     await expect(page.getByRole('button', { name: 'Scene 1', exact: true })).toBeVisible();
     expect(generations.filter(method => method === 'POST')).toHaveLength(1);
     await page.getByRole('link', { name: 'Keys', exact: true }).click();
+    await page.waitForURL('http://localhost:8081/dev-keys');
     await page.getByRole('button', { name: 'Lock console', exact: true }).click();
     await expect(page.getByRole('link', { name: 'Keys', exact: true })).toHaveCount(0);
     await page.reload();
