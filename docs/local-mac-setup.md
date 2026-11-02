@@ -1,3 +1,8 @@
+> Historical Gate 1 setup notes, preserved from the remote branch. The current
+> photo-and-premise preview needs no Postgres or queue worker. Use the
+> [current README](../README.md) and [ADR 0003](adr/0003-payback-reference-photo-generation.md).
+> The Intel Mac/tooling constraints below remain useful background.
+
 # WRECKDAY Gate 1: Intel Mac local preview
 
 User-supplied setup notes, not yet independently verified on this Mac. Target: Intel x86_64, macOS 12.7.6, zsh, Node 24 already installed. Homebrew and MacPorts do not work on this machine, and there is no Docker server; do not recommend them. Install under the user's home directory without sudo. Ask the user before installing anything not listed below.

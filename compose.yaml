@@ -1,48 +1,15 @@
+# Optional trusted-development generation API. No database or media volume.
 services:
-  db:
-    image: postgres:17-alpine
-    environment:
-      POSTGRES_USER: wreckday
-      POSTGRES_PASSWORD: local-only
-      POSTGRES_DB: wreckday
-    ports: ["127.0.0.1:55432:5432"]
-    volumes: ["database:/var/lib/postgresql/data"]
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U wreckday"]
-      interval: 3s
-      retries: 20
   api:
     build:
       context: .
       dockerfile: infrastructure/Dockerfile
       secrets: [proxy_ca]
-    environment: &environment
-      WRECKDAY_DATABASE_URL: postgresql+psycopg://wreckday:local-only@db:5432/wreckday
-      WRECKDAY_STORAGE_ROOT: /data/media
-      WRECKDAY_PUBLIC_API_URL: ${WRECKDAY_PUBLIC_API_URL:-http://localhost:8000}
-      WRECKDAY_CORS_ORIGINS: ${WRECKDAY_CORS_ORIGINS:-http://localhost:8081,http://localhost:8082}
-    command: ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000 --no-access-log"]
+    env_file:
+      - path: .env
+        required: false
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--no-access-log"]
     ports: ["127.0.0.1:8000:8000"]
-    volumes: ["media:/data/media"]
-    depends_on:
-      db: {condition: service_healthy}
-    healthcheck:
-      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/readyz')"]
-      interval: 5s
-      retries: 20
-  worker:
-    build:
-      context: .
-      dockerfile: infrastructure/Dockerfile
-      secrets: [proxy_ca]
-    environment: *environment
-    command: ["python", "-m", "app.worker"]
-    volumes: ["media:/data/media"]
-    depends_on:
-      api: {condition: service_healthy}
-volumes:
-  database:
-  media:
 secrets:
   proxy_ca:
     file: ${CODEX_PROXY_CERT:-/etc/ssl/certs/ca-certificates.crt}

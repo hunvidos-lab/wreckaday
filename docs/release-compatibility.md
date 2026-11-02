@@ -1,3 +1,7 @@
+> Historical server-based preview documentation. Superseded for the current app
+> by [ADR 0002](adr/0002-device-only-comeback-composer.md) and
+> [device-only validation](device-only-validation.md).
+
 # Compatibility and external assumptions — checked 2026-11-01
 
 Installed and checked: Node 24.19.0, pnpm 11.25.0, Python 3.12.14,
