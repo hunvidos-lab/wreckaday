@@ -1,0 +1,2 @@
+__d(function(g,r,i,a,m,e,d){"use strict";Object.defineProperty(e,'__esModule',{value:!0}),Object.defineProperty(e,"default",{enumerable:!0,get:function(){return u}});var t=r(d[0]);r(d[1]);var n=r(d[2]);function u(){return(0,n.jsx)(t.Redirect,{href:"/"})}},762,[773,776,6,781]);
+__d(function(g,r,i,a,m,e,d){},781,[]);
