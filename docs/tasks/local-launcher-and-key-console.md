@@ -1,5 +1,8 @@
 # Task for Codex: local test build, desktop icon, and in-app key console
 
+Implementation and actual checks: [local launcher validation](../local-launcher-validation.md).
+The numbered task below is retained as the original acceptance specification.
+
 Founder: macOS (Darwin 21 / Monterey, Intel 2017 Mac), zsh, repo at
 `/Users/bbb/wreckaday`. Branch from `feat/redesign-live-providers`.
 Do the parts IN ORDER. Do not start part C until A and B work.

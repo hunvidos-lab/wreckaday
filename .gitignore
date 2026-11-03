@@ -11,4 +11,5 @@ __pycache__/
 .mypy_cache/
 *.pyc
 work/
+.netlify/
 *.db

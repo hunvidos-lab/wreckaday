@@ -26,7 +26,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 }
 export const capabilities = () => request<Capabilities>("/v2/capabilities");
 export async function generateStory(draft: Draft, signal: AbortSignal) {
-  if (!draft.photoUri) throw new Error("Upload your own photo first.");
+  if (!draft.photoUri) throw new Error("Upload an authorized photo first.");
   const photo_data_url = await photoData(draft.photoUri);
   if (signal.aborted) throw new Error("Generation canceled.");
   return request<{

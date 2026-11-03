@@ -7,7 +7,8 @@
     "lint": "eslint apps/mobile packages/contracts && prettier --check apps/mobile/app apps/mobile/src packages/contracts/src",
     "format": "prettier --write apps/mobile/app apps/mobile/src packages/contracts/src",
     "test": "pnpm --filter @wreckday/contracts test && vitest run apps/mobile/src/composer-model.test.ts",
-    "web": "pnpm --filter mobile web"
+    "web": "pnpm --filter mobile web",
+    "dev": "bash scripts/dev-up.sh"
   },
   "devDependencies": {
     "@playwright/test": "^1.64.1",

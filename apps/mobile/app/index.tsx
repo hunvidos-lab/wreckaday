@@ -43,8 +43,8 @@ export default function Welcome() {
         </Text>
         <Text style={[styles.body, { maxWidth: 620 }]}>
           They lied. They played you. They thought you’d take it quietly. Design
-          your payback premise. Upload your photo. We turn it into a
-          photorealistic prank, with you in the starring role.
+          your payback premise. Upload an authorized photo. We turn it into a
+          photorealistic prank starring the person in the photo.
         </Text>
         <Button
           label="Design my payback →"

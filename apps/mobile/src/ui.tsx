@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useDevConsole } from "./dev-console";
 export const color = {
   bg: "#09090b",
   panel: "#131316",
@@ -157,6 +158,7 @@ export function Page({
   children: ReactNode;
   back?: boolean;
 }) {
+  const console = useDevConsole();
   return (
     <SafeAreaView style={styles.page} edges={["top", "left", "right"]}>
       <View
@@ -201,6 +203,14 @@ export function Page({
             <Nav label="Privacy" href="/settings" />
           </View>
         </View>
+        {console.status !== "hidden" && (
+          <View style={{ alignItems: "flex-end", paddingHorizontal: 20 }}>
+            <Nav
+              label={console.status === "ready" ? "Keys" : "Setup"}
+              href="/dev-keys"
+            />
+          </View>
+        )}
       </View>
       <ScrollView
         contentContainerStyle={styles.content}
@@ -219,12 +229,14 @@ function Nav({
   href,
 }: {
   label: string;
-  href: "/library" | "/settings";
+  href: "/library" | "/settings" | "/dev-keys";
 }) {
   return (
     <Pressable
       accessibilityRole="link"
-      onPress={() => router.push(href)}
+      onPress={() =>
+        href === "/dev-keys" ? router.navigate(href) : router.push(href)
+      }
       style={({ pressed }) => ({
         minHeight: 44,
         justifyContent: "center",
@@ -481,12 +493,16 @@ export function Field({
   onChange,
   maxLength = 140,
   editable = true,
+  secureTextEntry = false,
+  multiline = true,
 }: {
   label: string;
   value: string;
   onChange: (value: string) => void;
   maxLength?: number;
   editable?: boolean;
+  secureTextEntry?: boolean;
+  multiline?: boolean;
 }) {
   return (
     <View style={{ gap: 8 }}>
@@ -499,11 +515,18 @@ export function Field({
       <TextInput
         accessibilityLabel={label}
         editable={editable}
-        style={styles.input}
+        style={[
+          styles.input,
+          (!multiline || secureTextEntry) && { minHeight: 52, height: 52 },
+        ]}
         value={value}
         onChangeText={onChange}
         maxLength={maxLength}
-        multiline
+        multiline={multiline && !secureTextEntry}
+        secureTextEntry={secureTextEntry}
+        autoComplete={secureTextEntry ? "off" : undefined}
+        autoCorrect={secureTextEntry || !multiline ? false : undefined}
+        autoCapitalize={secureTextEntry || !multiline ? "none" : "sentences"}
         placeholderTextColor={color.faint}
       />
     </View>
@@ -527,9 +550,9 @@ export function ErrorText({ error }: { error: unknown }) {
   ) : null;
 }
 export const fixtures = [
-  require("../assets/examples/upgrade.png"),
-  require("../assets/examples/penthouse.png"),
-  require("../assets/examples/finale.png"),
+  require("../assets/examples/home-early.png"),
+  require("../assets/examples/caught-stealing.png"),
+  require("../assets/examples/vandal-caught.png"),
 ] as ImageSourcePropType[];
 export function FrameCard({
   source,

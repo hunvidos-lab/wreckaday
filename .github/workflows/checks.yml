@@ -16,7 +16,19 @@ jobs:
       - run: pnpm lint && pnpm typecheck && pnpm test
       - run: pnpm --filter mobile exec expo install --check
       - run: pnpm --filter mobile exec expo export --platform all
+      - run: node scripts/check-console-release.cjs
       - run: pnpm exec playwright install --with-deps chromium
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: services/api/requirements.lock
+      - name: Install local console browser-test API
+        run: |
+          python -m venv .venv
+          .venv/bin/pip install -r services/api/requirements.lock
+      - name: Local keys and one-scene browser flow (mocked provider HTTP)
+        run: node scripts/key-console-smoke.cjs
       - name: Photo-and-premise browser flow (mocked generation)
         run: |
           python scripts/serve-web.py > /tmp/wreckaday-web.log 2>&1 &

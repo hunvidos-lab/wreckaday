@@ -20,6 +20,7 @@ const apiOrigin = 'http://localhost:8000';
     await page.route(`${apiOrigin}/v2/**`, async route => {
       if (route.request().method() === 'OPTIONS') { await route.fulfill({ status: 204, headers: { 'Access-Control-Allow-Origin': new URL(origin).origin, 'Access-Control-Allow-Methods': 'GET, POST', 'Access-Control-Allow-Headers': 'Content-Type, Idempotency-Key' } }); return; }
       if (route.request().url().endsWith('/capabilities')) { await route.fulfill({ headers: cors, json: { data: { generation_available: available, photo_processing: 'Test provider: your photo is processed only after you agree and start generation.' } } }); return; }
+      if (route.request().url().includes('/v2/dev/keys')) { await route.fulfill({ status: 404, headers: cors, json: { error: { message: 'Console disabled in this test.' } } }); return; }
       const body = route.request().postDataJSON();
       expect(body.photo_data_url).toMatch(/^data:image\/(png|jpeg|webp);base64,/);
       expect(body.adult_confirmed && body.own_photo_confirmed && body.provider_processing_confirmed).toBe(true);
@@ -40,7 +41,7 @@ const apiOrigin = 'http://localhost:8000';
       await expect(page.getByLabel('Your selected reference photo', { exact: true })).toBeVisible();
       await page.getByLabel('YOUR PAYBACK PREMISE', { exact: true }).fill('Put me in a penthouse on a throne of roses. A fictional payback reveal.');
       await page.getByRole('checkbox', { name: 'I’m 18 or older.', exact: true }).click();
-      await page.getByRole('checkbox', { name: 'This photo is of me. I authorize its use in this prank.', exact: true }).click();
+    await page.getByRole('checkbox', { name: 'I am authorized to use this photo.', exact: true }).click();
       await expect(page.getByRole('button', { name: 'Generate my prank', exact: true })).toBeDisabled();
       await page.getByRole('checkbox', { name: 'I agree to that processing for this generation.', exact: true }).click();
     }

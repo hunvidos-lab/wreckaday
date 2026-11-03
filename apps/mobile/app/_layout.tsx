@@ -4,6 +4,7 @@ import { StatusBar } from "expo-status-bar";
 import { Text } from "react-native";
 import { ComposerProvider } from "../src/composer";
 import { clearAssets } from "../src/local-images";
+import { DevConsoleProvider } from "../src/dev-console";
 export default function Layout() {
   const [ready, setReady] = useState(false);
   const [error, setError] = useState(false);
@@ -24,13 +25,15 @@ export default function Layout() {
     );
   return (
     <ComposerProvider>
-      <StatusBar style="light" />
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          contentStyle: { backgroundColor: "#09090b" },
-        }}
-      />
+      <DevConsoleProvider>
+        <StatusBar style="light" />
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            contentStyle: { backgroundColor: "#09090b" },
+          }}
+        />
+      </DevConsoleProvider>
     </ComposerProvider>
   );
 }

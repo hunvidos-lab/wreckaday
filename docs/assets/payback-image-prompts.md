@@ -1,5 +1,8 @@
 # Photorealistic illustrative assets
 
+The active gallery now uses [everyday betrayal scenes](everyday-betrayal-prompts.md),
+generated 2026-11-03. The luxury assets and prompts below are preserved originals.
+
 Generated with the built-in imagegen tool, copied into `apps/mobile/assets/examples/`.
 These are art-direction examples, not outputs of the configured BFL/Qwen pipeline.
 All subjects are fictional adults. UI overlays supply the fiction disclosure.

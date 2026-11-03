@@ -1,5 +1,6 @@
 """Server-only opt-in development provider configuration. No credentials reach the app."""
 
+import os
 from decimal import Decimal
 from pathlib import Path
 from typing import Literal
@@ -17,12 +18,16 @@ ENV_FILE = next(
     Path.cwd() / ".env",
 )
 
+ENV_FILE = Path(os.environ.get("WRECKDAY_ENV_FILE", ENV_FILE))
+
 
 class GenerationSettings(BaseSettings):
     model_config = SettingsConfigDict(
         env_prefix="WRECKDAY_", env_file=ENV_FILE, hide_input_in_errors=True, extra="ignore"
     )
-    environment: Literal["development"] = "development"
+    environment: Literal["development", "production"] = "development"
+    key_console_enabled: bool = False
+    key_console_token: SecretStr = SecretStr("")
     live_generation_enabled: bool = False
     text_endpoint: str = ""
     text_api_key: SecretStr = SecretStr("")
@@ -33,7 +38,7 @@ class GenerationSettings(BaseSettings):
     image_model: str = "flux-2-klein-4b"
     session_budget_usd: Decimal = Field(default=Decimal("0"), ge=0)
     # Optional rolling cap per UTC day, applied on top of the process-lifetime session budget.
-    daily_budget_usd: Decimal | None = Field(default=None, gt=0)
+    daily_budget_usd: Decimal | None = Field(default=Decimal("2"), ge=0)
     # Separate content-free ledger; never use the retired story database.
     budget_database_url: SecretStr = SecretStr(
         f"sqlite:///{ENV_FILE.parent / 'work/generation-ledger.sqlite3'}"
@@ -74,7 +79,8 @@ class GenerationSettings(BaseSettings):
     @property
     def configured(self) -> bool:
         return bool(
-            self.live_generation_enabled
+            self.environment == "development"
+            and self.live_generation_enabled
             and self.text_endpoint
             and self.image_endpoint
             and (self.image_provider == "image_edits" or self.image_api_key.get_secret_value())

@@ -14,7 +14,8 @@ export function ScenarioExamples() {
         </Text>
       </View>
       <Text style={styles.body}>
-        Your face. An outrageous new reality. A reveal that makes it a prank.
+        Lies, affairs, theft. Ordinary people caught in an ugly fictional
+        moment.
       </Text>
       <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 18 }}>
         {EXAMPLES.map((example) => (
@@ -45,29 +46,18 @@ export function ScenarioExamples() {
                   AI FICTION / ILLUSTRATIVE EXAMPLE
                 </Text>
               </View>
-              <View
-                style={{
-                  position: "absolute",
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  backgroundColor: color.scrim,
-                  padding: 16,
-                }}
-              >
-                <Text
-                  style={{
-                    color: color.text,
-                    fontSize: 18,
-                    lineHeight: 23,
-                    fontWeight: "800",
-                  }}
-                >
-                  {example.caption}
-                </Text>
-              </View>
             </View>
             <View style={{ padding: 18, gap: 12 }}>
+              <Text
+                style={{
+                  color: color.text,
+                  fontSize: 18,
+                  lineHeight: 23,
+                  fontWeight: "800",
+                }}
+              >
+                {example.caption}
+              </Text>
               <Text style={styles.eyebrow}>{example.tag}</Text>
               <Text style={styles.heading}>{example.title}</Text>
               <Button

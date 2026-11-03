@@ -121,13 +121,13 @@ export default function Compose() {
       </Text>
       <Step
         index="1"
-        label="PUT YOURSELF IN THE PICTURE"
-        title="Upload your photo."
+        label="CHOOSE THE REFERENCE PHOTO"
+        title="Upload a photo."
         active={!draft.photoUri}
       >
         <Text style={styles.body}>
-          A clear photo of you, an adult. We use it as the reference for your
-          face and identity in every scene.
+          Choose a clear photo of an adult that you are authorized to use. We
+          use the person in the photo as the reference for every scene.
         </Text>
         {draft.photoUri && (
           <Image
@@ -205,7 +205,7 @@ export default function Compose() {
             disabled={generating}
           />
           <Check
-            label="This photo is of me. I authorize its use in this prank."
+            label="I am authorized to use this photo."
             value={rights}
             onChange={setRights}
             disabled={generating}

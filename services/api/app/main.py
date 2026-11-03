@@ -9,16 +9,29 @@ from fastapi.responses import JSONResponse
 from pydantic import ValidationError
 from starlette.concurrency import run_in_threadpool
 
+from .dev_keys import DevKeyConsole
+from .dev_keys import router as key_router
 from .generation import GenerateInput, GenerationError, GenerationService
-from .generation_config import settings
+from .generation_config import ENV_FILE, settings
 
 app = FastAPI(title="Wreckaday — payback preview", docs_url=None, redoc_url=None, openapi_url=None)
 service = GenerationService(settings)
+app.state.key_console = DevKeyConsole(settings, ENV_FILE)
+app.state.generation_service = lambda: service
+
+
+def install_settings(updated):
+    global settings
+    settings = updated
+
+
+app.state.install_settings = install_settings
+app.include_router(key_router)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins.split(","),
-    allow_methods=["GET", "POST"],
-    allow_headers=["Content-Type", "Idempotency-Key"],
+    allow_methods=["GET", "POST", "PUT"],
+    allow_headers=["Content-Type", "Idempotency-Key", "Authorization"],
 )
 
 
@@ -33,9 +46,17 @@ def error(code, message, status):
 @app.middleware("http")
 async def boundary(request: Request, call_next):
     origin = request.headers.get("origin")
-    if origin and origin not in settings.cors_origins.split(","):
+    console_path = request.url.path.startswith("/v2/dev/keys")
+    if console_path and not app.state.key_console.allowed(request):
+        response = error("NOT_FOUND", "Not found.", 404)
+    elif origin and origin not in settings.cors_origins.split(","):
         response = error("ORIGIN_NOT_ALLOWED", "This origin is not allowed.", 403)
-    elif request.url.path not in ("/healthz", "/readyz", "/v2/capabilities", "/v2/generate"):
+    elif not console_path and request.url.path not in (
+        "/healthz",
+        "/readyz",
+        "/v2/capabilities",
+        "/v2/generate",
+    ):
         response = error("LEGACY_API_RETIRED", "This route is no longer available.", 410)
     elif request.url.path == "/v2/generate" and request.method != "OPTIONS" and not settings.configured:
         response = error(
