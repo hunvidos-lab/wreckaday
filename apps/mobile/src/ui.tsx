@@ -550,9 +550,9 @@ export function ErrorText({ error }: { error: unknown }) {
   ) : null;
 }
 export const fixtures = [
-  require("../assets/examples/upgrade.png"),
-  require("../assets/examples/penthouse.png"),
-  require("../assets/examples/finale.png"),
+  require("../assets/examples/home-early.png"),
+  require("../assets/examples/caught-stealing.png"),
+  require("../assets/examples/vandal-caught.png"),
 ] as ImageSourcePropType[];
 export function FrameCard({
   source,

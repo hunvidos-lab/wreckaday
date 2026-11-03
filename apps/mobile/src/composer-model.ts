@@ -29,27 +29,27 @@ export const PACKAGES = [
 ] as const;
 export const EXAMPLES = [
   {
-    title: "Your seat’s been taken.",
-    tag: "THE UPGRADE",
+    title: "Home early.",
+    tag: "THE AFFAIR",
     premise:
-      "Put me on a private yacht at dusk, impeccably dressed, looking straight into the camera. The life they thought I couldn't have. A cold, cinematic fictional reveal.",
-    caption: "Turns out the baggage was optional.",
+      "Show me arriving home early to a cramped kitchen: my partner freezes at the stove while a stranger stands beside them in my dressing gown. Ordinary people, awkward silence, believable phone photography. All characters are fictional adults; keep it fully clothed and clearly labeled AI fiction.",
+    caption: "You said you were home alone.",
     image: 0,
   },
   {
-    title: "Living rent-free.",
-    tag: "THE TAKEOVER",
+    title: "Caught stealing.",
+    tag: "THE THEFT",
     premise:
-      "Put me on a throne surrounded by hundreds of red roses in a penthouse above the city. Expensive, excessive, completely unbothered. End with a payback-fiction reveal.",
-    caption: "You wanted space. I upgraded mine.",
+      "Show me discovering a trusted friend taking cash from my handbag in a cluttered bedroom during a house party. The money is still in their hand; I am standing in the doorway. Harsh phone flash, ordinary clothes, restrained reactions. All characters are fictional adults; clearly label it AI fiction.",
+    caption: "Funny place to look for your coat.",
     image: 1,
   },
   {
-    title: "A table for everyone who matters.",
-    tag: "THE FINAL WORD",
+    title: "The vandal caught.",
+    tag: "THE VANDAL",
     premise:
-      "Put me at the head of an empty banquet table in a candlelit restaurant, raising a glass to my own exit. Make the empty seats the punchline. Clearly fictional.",
-    caption: "Your invitation got lost. Deliberately.",
+      "Show me returning to an ordinary wet car park and catching someone scratching my old hatchback with a key. Their hand is still beside the fresh scratch as they look back at me. Nighttime phone flash, everyday people, believable physical detail. All characters are fictional adults; clearly label it AI fiction.",
+    caption: "Still holding the key. Still denying it.",
     image: 2,
   },
 ] as const;
