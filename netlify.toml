@@ -1,0 +1,7 @@
+[build]
+  command = "node scripts/build-netlify.cjs"
+  publish = "apps/mobile/dist"
+
+[build.environment]
+  NODE_VERSION = "24"
+  EXPO_NO_DOTENV = "1"
