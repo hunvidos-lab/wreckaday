@@ -9,6 +9,7 @@ delete env.WRECKADAY_WEB_BASE_URL;
 for (const [command, args] of [
   ['pnpm', ['--filter', 'mobile', 'exec', 'expo', 'export', '--platform', 'web', '--max-workers', '1']],
   ['node', ['scripts/check-console-release.cjs']],
+  ['node', ['scripts/prepare-pages.cjs']],
 ]) {
   const result = spawnSync(command, args, { cwd: root, env, stdio: 'inherit' });
   if (result.error) throw result.error;
@@ -17,12 +18,17 @@ for (const [command, args] of [
 const output = path.join(root, 'apps/mobile/dist');
 let redirects = '';
 if (api === '/api') {
-  fs.writeFileSync(path.join(output, 'preview-capabilities.json'), JSON.stringify({
+  const capabilities = JSON.stringify({
     data: {
       generation_available: false,
       photo_processing: 'Live generation is not connected to this hosted preview. Selecting a photo keeps it in your browser; no model call is made.',
     },
-  }));
+  });
+  fs.writeFileSync(path.join(output, 'preview-capabilities.json'), capabilities);
+  // Anonymous Drop deployments may not apply redirect rules. Serve the same
+  // capability at its exact API path as well as the JSON rewrite target.
+  fs.mkdirSync(path.join(output, 'api/v2'), { recursive: true });
+  fs.writeFileSync(path.join(output, 'api/v2/capabilities'), capabilities);
   redirects += '/api/v2/capabilities /preview-capabilities.json 200\n';
 }
 fs.writeFileSync(path.join(output, '_redirects'), redirects + '/* /index.html 200\n');

@@ -12,7 +12,9 @@ to any provider. No backend or inference is included in this static deployment.
 
 Netlify serves the app at the domain root. The build clears the GitHub Pages base
 path, disables dotenv loading, checks that the local key console is absent from
-the release, and writes SPA redirects so direct links and refreshes work.
+the release, and writes SPA redirects plus physical route entry points so direct
+links and refreshes work even on temporary anonymous deployments. An exact-path
+static capabilities response also works without rewrite processing.
 
 To connect a hosted backend later, set `EXPO_PUBLIC_API_URL` to its HTTPS origin
 and rebuild. Provider keys belong on that backend. The backend must allow the
