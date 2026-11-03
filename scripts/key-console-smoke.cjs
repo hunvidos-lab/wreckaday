@@ -104,7 +104,7 @@ async function waitFor(url, child) {
     await page.getByRole('button', { name: 'Choose my photo', exact: true }).click();
     await (await chooser).setFiles('apps/mobile/assets/examples/penthouse.png');
     await field('YOUR PAYBACK PREMISE').fill('Put me in a fictional penthouse with a throne of red roses.');
-    for (const label of ['I’m 18 or older.', 'This photo is of me. I authorize its use in this prank.', 'I agree to that processing for this generation.']) await page.getByRole('checkbox', { name: label, exact: true }).click();
+    for (const label of ['I’m 18 or older.', 'I am authorized to use this photo.', 'I agree to that processing for this generation.']) await page.getByRole('checkbox', { name: label, exact: true }).click();
     await page.getByRole('button', { name: 'Generate my prank', exact: true }).click();
     await expect(page.getByRole('button', { name: 'Scene 1', exact: true })).toBeVisible();
     expect(generations.filter(method => method === 'POST')).toHaveLength(1);

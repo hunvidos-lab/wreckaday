@@ -10,7 +10,7 @@ Review the result, adjust captions if needed, and export labeled PNGs to share.
 
 Examples appear before package pricing. Flicker $5.99 / Blaze $19.99 / Inferno
 $29.99 USD are proposed one-time prices for 1 / 3 / 5 scenes. Checkout is not
-connected. The reference photo belongs to the uploader; the fiction label and
+connected. The uploader must be authorized to use the reference photo; the fiction label and
 reveal stay on every export. Sharing uses the user's chosen messaging identity.
 
 ## Start with one command or a Desktop icon

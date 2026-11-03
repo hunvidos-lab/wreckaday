@@ -4,6 +4,10 @@ Accepted 2026-11-02. The founder agreed the floor bullets below and asked for
 broader generation freedom in Inferno. This changes a core product goal and
 updates hard rule 1 in `CLAUDE.md`.
 
+**Amendment, 2026-11-03:** The founder now permits an authorized photo of an
+adult other than the uploader. The photo-use confirmation and review prompts
+reflect this; the other content-floor rules continue to apply.
+
 ## Tiers
 
 | Tier | Price | Scenes | Model access | Creative scope |
@@ -21,7 +25,7 @@ built-in behaviour; it is not a promise of "no guardrails".
 
 - No minors or anyone who looks under 18.
 - No nudity or sexual content of a real face.
-- No real person other than the uploader.
+- The uploader must be authorized to use the adult reference photo.
 - No realistic fabricated evidence of crime, emergencies, arrests or infidelity.
 - No real threats, doxxing, blackmail or self-harm.
 
