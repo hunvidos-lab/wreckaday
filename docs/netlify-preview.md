@@ -4,6 +4,8 @@ Build from the repository root with `node scripts/build-netlify.cjs`.
 The result is `apps/mobile/dist`; `netlify.toml` supplies the same build settings
 when importing the GitHub repository into Netlify. Use source branch
 `feat/local-launcher-key-console` for this revision.
+The root-level `netlify.toml` explicitly sets the base directory to the
+repository root, even if Netlify detected `apps/mobile` in the dashboard.
 
 The preview supports browsing the gallery, captions, package selection, photo
 selection, premise entry and consent controls. Its capabilities response reports
